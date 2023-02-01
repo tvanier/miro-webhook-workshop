@@ -1,17 +1,20 @@
 # Miro Webhook Workshop
 
-A workshop to build and test a Miro webhook.
+A workshop to build and test a Miro webhook locally!
 
 ## Prerequisites
 - a Miro account with a Developer team
-- an installed application and its access token
+- an installed application with its access token and client secret
 - an existing board
 
 See more details [here](https://developers.miro.com/reference/api-reference).
 
-Create or edit the `.env.local` file (git ignored) to set the `VITE_MIRO_ACCESS_TOKEN` variable with your Miro access token:
+Create or edit the `.env.local` file (git ignored) to set 2 environment variables:
+- `VITE_MIRO_ACCESS_TOKEN`: your Miro access token
+- `MIRO_CLIENT_SECRET`: your Miro client secret
 ```
 VITE_MIRO_ACCESS_TOKEN=<access-token>
+MIRO_CLIENT_SECRET=<client-secret>
 ```
 
 ## Run
@@ -26,10 +29,14 @@ ssh -R 80:localhost:5173 localhost.run
 ```
 This should expose your dev server through a public URL like `https://randomchars.lhr.life`.
 
-From the test page, you can create webhook subscriptions by entering the public URL of the `/hook` endpoint of the dev server:
+From the test page, you can create webhook subscriptions by entering the public URL of the `/webhook` endpoint of the dev server:
 
-<img src="test-page.png" />
+<img src="dashboard.png" />
 
 ## Hook function
 
-The actual `hook` TypeScript function is implemented in [src/hook.ts](src/hook.ts), it handles the [webhooks event flow](https://developers.miro.com/reference/webhooks-overview#webhooks-event-workflow) and can be completed by your own webhook logic.
+The actual `handleHook` TypeScript function is implemented in [src/webhhook.ts](src/webhook.ts), it handles the [webhooks event flow](https://developers.miro.com/reference/webhooks-overview#webhooks-event-workflow) and calls the `processHook` function, where a custom hook logic can be implemented.
+
+Example of sticky update:
+
+<img src="webhook-sticky-update.png" />

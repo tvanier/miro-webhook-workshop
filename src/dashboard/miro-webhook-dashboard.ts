@@ -2,15 +2,29 @@ import { css, html, LitElement, nothing } from "lit";
 import { customElement } from "lit/decorators/custom-element.js";
 import { query } from "lit/decorators/query.js";
 import { state } from "lit/decorators/state.js";
-import { createWebhookSubscription, getAllWebhookSubscriptions, getBoards } from "../miro-api";
-import "./miro-webhook-subscription.js";
+import {
+  createWebhookSubscription,
+  deleteWebhookSubscription,
+  getAllWebhookSubscriptions,
+  getBoards
+} from "../miro-api";
 import { WebhookSubscription } from "../types";
 
 @customElement("miro-webhook-dashboard")
-export class MiroWFDashboard extends LitElement {
+export class MiroWebhookDashboard extends LitElement {
   static styles = css`
     input {
       min-width: 500px;
+    }
+
+    table {
+      border-collapse: collapse;
+    }
+
+    th, td {
+      text-align: left;
+      border: 1px solid;
+      padding: 10px;
     }
   `
 
@@ -46,17 +60,43 @@ export class MiroWFDashboard extends LitElement {
     this.refreshSubscriptions();
   }
 
+  async deleteSubscription(subscription: WebhookSubscription) {
+    await deleteWebhookSubscription(subscription.id);
+    this.refreshSubscriptions();
+  }
+
+  renderSubscription(subscription: WebhookSubscription) {
+    return html`
+      <tr>
+        <td>${subscription?.id}</td>
+
+        <td>Callback URL: ${subscription?.callbackUrl}</td>
+
+        <td>
+          <button
+            @click=${() => this.deleteSubscription(subscription)}
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    `;
+  }
+
   renderSubscriptions() {
     return html`
-      ${this.webhookSubscriptions.map(
-        (subscription) =>
-          html`
-            <miro-webhook-subscription
-              .subscription=${subscription}
-              @remove=${this.refreshSubscriptions}
-            >
-            </miro-webhook-subscription>`
-      )}
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Subscription ID</th>
+            <th scope="col">Callback URL</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${this.webhookSubscriptions.map(this.renderSubscription.bind(this))}
+        </tbody>
+      </table>
     `
   }
 

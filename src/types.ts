@@ -13,7 +13,7 @@ export type WebhookSubscription = {
 
 export type WebhookStatus = 'enabled' | 'disabled' | 'lost_access';
 
-export type WebhookRequest = Pick<IncomingMessage, 'headers'> & {
+export type WebhookRequest = Pick<IncomingMessage, 'url' | 'headers'> & {
   body?: string
 }
 

@@ -1,15 +1,21 @@
-import { defineConfig, Plugin } from 'vite';
-import { hook } from './src/hook';
+import { defineConfig, loadEnv, Plugin } from 'vite';
+import { handleHook } from './src/webhook';
 
 const MiroHookPlugin: Plugin = {
   name: 'hook-plugin',
   configureServer(server) {
-    server.middlewares.use('/hook', (req, res) => {
+    server.middlewares.use('/webhook', (req, res) => {
       let body = '';
 
       req.on('data', (chunk) => body += chunk);
       req.on('end', () => {
-        hook({ ...req, body })
+        const hookReq = {
+          url: req.url,
+          headers: req.headers,
+          body
+        };
+
+        handleHook(hookReq)
           .then((hookRes) => {
             res.statusCode = hookRes.statusCode;
             res.statusMessage = hookRes.statusMessage;
@@ -19,14 +25,19 @@ const MiroHookPlugin: Plugin = {
               }
             }
             res.end(hookRes.body);
-          })
+          });
       });
     })
   }
 }
 
-export default defineConfig({
-  plugins: [
-    MiroHookPlugin
-  ]
+export default defineConfig(({ mode }) => {
+  // https://vitejs.dev/config/#environment-variables
+  process.env = {...process.env, ...loadEnv(mode, process.cwd(), '')};
+
+  return {
+    plugins: [
+      MiroHookPlugin
+    ]
+  };
 });
