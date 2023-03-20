@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@netlify/functions": "1.4.0",
-    "@types/node": "18.15.1",
+    "@types/node": "18.15.3",
     "lit": "2.6.1",
     "typescript": "4.9.5",
     "vite": "4.1.4"
