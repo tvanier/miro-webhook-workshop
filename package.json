@@ -13,7 +13,7 @@
     "@netlify/functions": "2.6.0",
     "@types/node": "18.19.30",
     "lit": "3.1.2",
-    "typescript": "5.4.3",
+    "typescript": "5.4.4",
     "vite": "5.2.8"
   }
 }
