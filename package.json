@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@netlify/functions": "5.0.1",
+    "@netlify/functions": "5.1.0",
     "@types/node": "24.10.0",
     "lit": "3.3.1",
     "typescript": "5.9.3",
